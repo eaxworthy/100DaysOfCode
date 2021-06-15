@@ -56,7 +56,7 @@ def report():
     print(f"Water: {mr['water']}ml\nMilk: {mr['milk']}ml\nCoffee: {mr['coffee']}ml\nMoney: ${mr['profit']}")
 
 on = True
-print(drink_list)
+
 while on:
     #valid inputs are one of the drinks or report
     order = input('What would you like? (espresso/latte/cappuccino): ')
