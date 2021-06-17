@@ -1,4 +1,6 @@
 from data import question_data
+from urllib.parse import unquote
+
 class QuizQuestion:
     def __init__(self, text='Default Text', answer='Default Answer'):
         self.text = text
@@ -14,7 +16,7 @@ class QuizGame:
         self.question_number = 0
         self.question_bank = []
         for question in data:
-            self.question_bank.append(QuizQuestion(question['text'], question['answer']))
+            self.question_bank.append(QuizQuestion(unquote(question['question']), question['correct_answer']))
 
     def print_questions(self):
         '''Prints all QuizQuestions in the question_bank'''
