@@ -8,31 +8,42 @@ def race(turtles):
             if turtle.xcor() >= 230:
                 return color
 
+def get_bet():
+    bet = ''
+    while bet not in colors:
+        bet = input('Which turtle do you think will win? (red/orange/yellow/green/blue/violet): ').lower()
+        if bet not in colors:
+            print('Invalid turtle. Please try again.')
+    return bet
+
 def check_bet(bet, winner):
     if bet == winner:
         print(bet + ' won!')
     else:
-        print('Sorry, ' + bet + ' lost. ' + winner + ' was the winner.')
+        print('Sorry, ' + bet + ' lost. ' + winner.title() + ' was the winner.')
 
-colors = ['red', 'orange', 'yellow', 'green', 'blue', 'violet']
-turtles = {}
-x = -230
-y = 115
+def create_turtles(turtles, colors):
+    x = -230
+    y = 115
+    for color in colors:
+        turtles[color] = Turtle()
+        turtles[color].penup()
+        turtles[color].shapesize(1.2, 1.2, 2)
+        turtles[color].shape('turtle')
+        turtles[color].color(color,color)
+        turtles[color].setpos(x, y)
+        y -= 46
+
 screen = Screen()
 screen.setup(width= 500, height = 330)
 
-for color in colors:
-    turtles[color] = Turtle()
-    turtles[color].penup()
-    turtles[color].shapesize(1.2, 1.2, 2)
-    turtles[color].shape('turtle')
-    turtles[color].color(color,color)
-    turtles[color].setpos(x, y)
-    y -= 46
+colors = ['red', 'orange', 'yellow', 'green', 'blue', 'violet']
+turtles = {}
+create_turtles(turtles, colors)
 
-bet = input('Which turtle do you think will win? (red/orange/yellow/green/blue/violet): ').lower()
+
+bet = get_bet()
 winner = race(turtles)
-
 check_bet(bet, winner)
 
 screen.exitonclick()
