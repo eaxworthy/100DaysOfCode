@@ -2,6 +2,9 @@ from turtle import Turtle, Screen
 from random import randint
 import time
 
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 600
+
 class Food():
 
     def __init__(self):
@@ -13,8 +16,8 @@ class Food():
 
     def move_food(self):
         self.marker.hideturtle()
-        x = randint(-285, 285)
-        y = randint(-285, 285)
+        x = randint(-(SCREEN_WIDTH/2 - 20), (SCREEN_WIDTH/2 - 20))
+        y = randint(-(SCREEN_HEIGHT/2 - 20), (SCREEN_HEIGHT/2 - 20))
         self.marker.setpos(x, y)
         self.marker.showturtle()
 
@@ -58,31 +61,48 @@ class Snake():
     def move(self):
         new_pos = [self.head.pos()]
         self.head.forward(10) 
-        if self.touch_food():
+        if self.touch_food(self.head.xcor(), self.head.ycor()):
             self.eat()
+        head_x = self.head.xcor()
+        head_y = self.head.ycor()
+        self.touch_self(head_x, head_y)
+        self.touch_edge(head_x, head_y)
         for segment in self.body[1:]:
             new_pos.append(segment.pos())
             segment.setpos(new_pos.pop(0))
         self.screen.update()
         time.sleep(0.05)
 
-    def touch_food(self):
-        food_x = self.food.marker.xcor()
-        food_y = self.food.marker.ycor()
-        head_x = self.head.xcor()
-        head_y = self.head.ycor()
-        if abs(head_x - food_x) < 15 and abs(head_y - food_y) < 15:
+    def touch_food(self, head_x, head_y):
+        if abs(head_x - self.food.marker.xcor()) < 15 and abs(head_y - self.food.marker.ycor()) < 15:
             return True
         return False
+    
+    def touch_self(self, head_x, head_y):
+        for segment in self.body[1:]:
+            dif_x = abs(head_x - segment.xcor())
+            dif_y = abs(head_y - segment.ycor())
+            if dif_x < 10 and dif_y < 10:
+                self.game_over()
+
+    def touch_edge(self, head_x, head_y):
+        if abs(head_x) > (SCREEN_WIDTH/2 - 15) or abs(head_y) > (SCREEN_HEIGHT/2 - 10):
+            self.game_over()
+
 
     def turn(self, direction):
         self.head.setheading(direction)
+
+    def game_over(self):
+        print('collision')
+        #delete all turtles (snake body and food)
+        #display game over message
 
 class SnakeGame():
      
     def __init__(self):
         self.screen = Screen()
-        self.screen.setup(width=600, height=600)
+        self.screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
         self.screen.bgcolor('black')
         self.screen.title('Snake')
         self.screen.tracer(False)
