@@ -7,7 +7,7 @@ SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
 
 class Food():
-'''The food object the snake eats to gain score.'''
+    '''The food object the snake eats to gain score.'''
 
     def __init__(self):
         '''Creates the food object and sets appearance. Takes no parameters'''
@@ -29,7 +29,8 @@ class Food():
 
 
 class Snake():
-'''The snake object controlled by the player.'''
+    '''The snake object controlled by the player.'''
+
     def __init__(self, screen):
         '''Creates a snake with 3 segments and a score of 0. also creates
         food object and sets first location. Updates screen to reflect
@@ -110,7 +111,7 @@ class Snake():
             if dif_x < 10 and dif_y < 10:
                 return True
 
-    def touch_edge(self, head_x, head_y):i
+    def touch_edge(self, head_x, head_y):
         '''Returns True if head went over the gameboard boundary. False otherwise.'''
         if abs(head_x) > (SCREEN_WIDTH/2 - 15) or abs(head_y) > (SCREEN_HEIGHT/2 - 10):
             return True
@@ -127,7 +128,7 @@ class Snake():
 class SnakeGame():
     '''Wrapper for game.''' 
    
-   def __init__(self):
+    def __init__(self):
         self.screen = Screen()
         self.screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
         self.screen.bgcolor('black')
@@ -141,15 +142,18 @@ class SnakeGame():
         self.screen.listen()
 
         self.continue_game = True
-
         while self.continue_game:
             self.continue_game = self.snake.move()
-        
+    
         score = self.snake.get_score()
         self.screen.reset()
         message = Turtle()
         message.pencolor('red')
         message.write(arg=f'Game Over\nFinal Score: {score}', align='center', font=('Arial', 14, 'normal'))
-        self.screen.exitonclick()
+
+    def play_again(self):
+        play_again = self.screen.textinput('Play Again?','Play again? (yes/no): ').lower()
+        self.screen.reset()
+        return play_again
 
 
