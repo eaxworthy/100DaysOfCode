@@ -152,6 +152,8 @@ class SnakeGame():
         message.write(arg=f'Game Over\nFinal Score: {score}', align='center', font=('Arial', 14, 'normal'))
 
     def play_again(self):
+        '''Returns user input on whether they want to restart a fresh game. Y or y are the only
+        two inputs which will cause a restart. Others exit program.'''
         play_again = self.screen.textinput('Play Again?','Play again? (yes/no): ').lower()
         self.screen.reset()
         return play_again
