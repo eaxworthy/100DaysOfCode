@@ -30,10 +30,10 @@ class Ball(Turtle):
         self.direction = -1
 
     def bounce(self):
-        heading = 270 + (90*self.direction) + randint(-85, 85)
+        heading = 270 + (90*self.direction) + randint(-75, 75)
         self.setheading(heading)
         self.direction = -self.direction
-        self.forward(10)
+        self.forward(20)
 
     def wall_bounce(self):
         sign_y = -1 if self.ycor() < 0 else 1
@@ -42,23 +42,23 @@ class Ball(Turtle):
         if self.direction < 0:
             #lower wall bounce
             if sign_y < 0:
-                angle = randint(5,85)
+                angle = randint(15,75)
             #upper wall bounce    
             else:
-                angle = randint(275, 355)
+                angle = randint(285, 345)
         
         #going left
         else:
             if sign_y < 0:
-                angle = randint(95,175)
+                angle = randint(105,165)
             else:
-                angle = randint(185,265) 
+                angle = randint(195,255) 
         self.setheading(angle)
-        self.forward(10)
+        self.forward(20)
     
     def paddle_collision(self, paddle):
         pos = paddle.pos()
-        if abs(self.xcor()-pos[0]) < 30 and abs(self.xcor()) < abs(pos[0]) and abs(self.ycor()-pos[1]) < 30:
+        if abs(self.xcor()-pos[0]) < 20 and abs(self.xcor()) < abs(pos[0]) and abs(self.ycor()-pos[1]) < 35:
             return True
         return False
 
@@ -95,6 +95,7 @@ class PongGame():
         message.sety((SCREEN_HEIGHT/2)-30)
         message.color('white')
         message.write(arg='Click to start',font=FONT, align='center')
+        screen.update()
 
         def start(_1, _2):
             message.clear()
@@ -111,7 +112,7 @@ class PongGame():
                     ball.direction = -ball.direction
                     ball.setheading(90 + (90*ball.direction))
 
-                ball.forward(15)
+                ball.forward(20)
                 screen.update()
                 time.sleep(0.05) 
 
