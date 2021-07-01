@@ -17,6 +17,14 @@ class Paddle(Turtle):
         self.shapesize(1,4,2)
         self.setheading(90)
         self.setx((SCREEN_WIDTH/2 - 30) * player_num)
+
+    def up(self):
+        if self.ycor() < SCREEN_HEIGHT/2 - 55:
+            self.forward(20)
+
+    def down(self):
+        if self.ycor() > -(SCREEN_HEIGHT/2-55):
+            self.backward(20)
    
 class Ball(Turtle):
     def __init__(self):
@@ -58,7 +66,7 @@ class Ball(Turtle):
     
     def paddle_collision(self, paddle):
         pos = paddle.pos()
-        if abs(self.xcor()-pos[0]) < 20 and abs(self.xcor()) < abs(pos[0]) and abs(self.ycor()-pos[1]) < 35:
+        if abs(self.xcor()-pos[0]) < 20 and abs(self.xcor()) < abs(pos[0]) and abs(self.ycor()-pos[1]) < 45:
             return True
         return False
 
@@ -117,10 +125,10 @@ class PongGame():
                 time.sleep(0.05) 
 
         screen.onclick(start, 1, None) 
-        screen.onkey(lambda: paddle_1.forward(25), 'w')
-        screen.onkey(lambda: paddle_1.backward(25), 's')
-        screen.onkey(lambda: paddle_2.forward(25), 'i')
-        screen.onkey(lambda: paddle_2.backward(25), 'k')
+        screen.onkey(paddle_1.up, 'w')
+        screen.onkey(paddle_1.down, 's')
+        screen.onkey(paddle_2.up, 'i')
+        screen.onkey(paddle_2.down, 'k')
 
         screen.listen()
     
