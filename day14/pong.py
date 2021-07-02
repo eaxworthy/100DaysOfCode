@@ -5,6 +5,7 @@ import time
 SCREEN_HEIGHT = 550
 SCREEN_WIDTH = 950
 FONT = ('Futura', '14', 'normal')
+SCORE_FONT= ('Futura', '40', 'normal')
 
 class Paddle(Turtle):
     def __init__(self, player_num): 
@@ -16,7 +17,8 @@ class Paddle(Turtle):
         self.shape('square')
         self.shapesize(1,4,2)
         self.setheading(90)
-        self.setx((SCREEN_WIDTH/2 - 30) * player_num)
+        self.setx((SCREEN_WIDTH/2 - 30) * player_num) 
+        self.id = player_num
 
     def up(self):
         if self.ycor() < SCREEN_HEIGHT/2 - 55:
@@ -65,20 +67,32 @@ class Ball(Turtle):
         self.forward(20)
     
     def paddle_collision(self, paddle):
+        '''returns true if the ball has entered the supplied paddle's hit box. false otherwise.'''
         pos = paddle.pos()
         if abs(self.xcor()-pos[0]) < 20 and abs(self.xcor()) < abs(pos[0]) and abs(self.ycor()-pos[1]) < 45:
             return True
         return False
 
     def edge_collision(self):
+        '''returns true if ball collides with board edge. false otherwise.'''
         if abs(self.ycor()) > SCREEN_HEIGHT/2 - 20:
             return True
         return False
 
-    def goal(self):
+    def goal_check(self):
+        '''returns true if ball passes past paddle scoring a point.'''
         if abs(self.xcor()) > SCREEN_WIDTH/2:
-            return True
-        return False
+            return 1 if self.xcor() > 0 else -1
+        return 0
+
+class Score(Turtle):
+    def __init__(self, player_num): 
+        super().__init__()
+        self.hideturtle()
+        self.color('green')
+        self.penup()
+        self.setpos((SCREEN_WIDTH/2 - 100) * player_num, SCREEN_HEIGHT/2 - 80) 
+        self.value = 0
 
 
 class PongGame():
@@ -103,19 +117,35 @@ class PongGame():
         message.sety((SCREEN_HEIGHT/2)-30)
         message.color('white')
         message.write(arg='Click to start',font=FONT, align='center')
+        
+        score_1 = Score(-1)
+        score_2 = Score(1)
+
+        
         screen.update()
 
+        def update_scores():
+            score_1.clear()
+            score_2.clear()
+            score_1.write(arg=score_1.value, font=SCORE_FONT, align = 'left')
+            score_2.write(arg=score_2.value, font=SCORE_FONT, align = 'right')
+
         def start(_1, _2):
+            
             message.clear()
-            #TODO: Setup scoreboard
+            update_scores()
             ball.bouncing = True
             while ball.bouncing:
                 if ball.paddle_collision(paddle_1) or ball.paddle_collision(paddle_2):
                     ball.bounce()
                 elif ball.edge_collision():
                     ball.wall_bounce()
-                elif ball.goal():
-                    #TODO: Update score
+                elif ball.goal_check():
+                    if ball.direction < 0:
+                        score_1.value += 1
+                    else:
+                        score_2.value += 1
+                    update_scores()
                     ball.setpos(0,0)
                     ball.direction = -ball.direction
                     ball.setheading(90 + (90*ball.direction))
