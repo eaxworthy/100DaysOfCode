@@ -30,14 +30,12 @@ class Car(Turtle):
 
     def move(self):
         if not self.offscreen():
-            self.forward(self.movement_speed)
-        #elif turtle_collision:     
+            self.forward(self.movement_speed)     
         else:
             self.reset()
-    
-    def collision(self):
-        if (abs(self.xcor() - self.turtle_link.xcor()) < 5) and (abs(self.ycor() - self.turtle_link.ycor()) < 5):
-            print(self.pos(), self.turtle_link.pos())
+ 
+    def collision(self, player):
+        if (abs(self.xcor() - player.xcor()) < 18) and (abs(self.ycor() - player.ycor()) < 15):
             return True
         return False
 
@@ -47,42 +45,68 @@ class Player(Turtle):
         self.penup()
         self.color('spring green')
         self.shape('turtle')
-        self.setpos(0, -(SCREEN_HEIGHT/2 + 5))
+        self.setpos(0, -(SCREEN_HEIGHT/2 - 10))
         self.setheading(90)
+        self.crossed_street = False
     
-    def move(self):
+    def up(self):
         if self.ycor() > SCREEN_HEIGHT/2:
-            self.setpos(0, -(SCREEN_HEIGHT/2 + 5))
+            self.setpos(0, - (SCREEN_HEIGHT/2 - 10))
+            self.crossed_street = True
         self.forward(10)
+    
+    def down(self):
+        if self.ycor() > -(SCREEN_HEIGHT/2 - 10):
+            self.backward(10)
 
 
-screen = Screen()
-screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
-screen.tracer(False)
+class TurtleCrossing():
+    def __init__(self):
+        self.screen = Screen()
+        self.screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
+        self.screen.tracer(False)
 
-player = Player()
-screen.onkey(player.move, 'w')
-screen.listen()
+        self.player = Player()
+        self.screen.onkey(self.player.up, 'w')
+        self.screen.onkey(self.player.down, 's')
+        self.screen.listen()
 
-cars = []
-cars.extend([Car(player) for i in range(10)])
-screen.update()
+        self.cars = []
+        self.cars.extend([Car(self.player) for i in range(5)])
+        self.screen.update()
+        
+        self.level = 1
+        self.game_over = False
 
-game_over = False
+    def game_over_message(self):
+        message = Turtle()
+        message.hideturtle()
+        message.penup()
+        message.setpos(0, SCREEN_HEIGHT/2 - 20)
+        message.write(arg='GAME OVER', align='center', font=('Futura', '12', 'normal'))
+    
+    def level_up(self):
+        self.player.crossed_street = False
+        self.level += 1
+        self.cars.extend([Car(self.player) for i in range(5)])
+
+    def start(self):
+        while True:
+            for car in self.cars:
+                car.move()
+                if car.collision(self.player):
+                    self.game_over = True
+                    break
+            if self.player.crossed_street:
+                self.level_up()
+            if self.game_over:
+                self.game_over_message()
+                break
+            self.screen.update()
+            sleep(0.05)
+        self.screen.exitonclick()
 
 
-while True:
-    #player.move()
-    for car in cars:
-        car.move()
-        if car.collision():
-            print('Collision')
-            game_over = True
-            break
-    if game_over:
-        break
-    screen.update()
-    sleep(0.05)
 
-screen.exitonclick()
-
+game = TurtleCrossing()
+game.start()
