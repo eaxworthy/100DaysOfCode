@@ -1,10 +1,14 @@
 from turtle import Turtle, Screen
 from random import randint
 import time
+import os
 
 #constants for screen size
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
+
+#constant for path to high score file
+HIGH_SCORE_FILE = './high_score.txt'
 
 class Food():
     '''The food object the snake eats to gain score.'''
@@ -129,6 +133,14 @@ class SnakeGame():
     '''Wrapper for game.''' 
    
     def __init__(self):
+
+
+        if os.path.exists(HIGH_SCORE_FILE):
+            self.high_score = int(open(HIGH_SCORE_FILE,'r').read())
+        else:
+            self.high_score = 0
+            open(HIGH_SCORE_FILE, 'w').write('0')
+
         self.screen = Screen()
         self.screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
         self.screen.bgcolor('black')
@@ -146,10 +158,13 @@ class SnakeGame():
             self.continue_game = self.snake.move()
     
         score = self.snake.get_score()
+        if score > self.high_score:
+            open(HIGH_SCORE_FILE, 'w').write(str(score))
+
         self.screen.reset()
         message = Turtle()
         message.pencolor('red')
-        message.write(arg=f'Game Over\nFinal Score: {score}', align='center', font=('Arial', 14, 'normal'))
+        message.write(arg=f'\t  Game Over\nFinal Score: {score} High Score: {self.high_score}', align='center', font=('Arial', 14, 'normal'))
 
     def play_again(self):
         '''Returns user input on whether they want to restart a fresh game. Y or y are the only
