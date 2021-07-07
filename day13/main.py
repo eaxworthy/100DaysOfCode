@@ -1,6 +1,6 @@
 from snake import SnakeGame
 
-play = 'y'
-while play == 'y':
+play = 'yes'
+while play == 'yes':
     game = SnakeGame()
     play = game.play_again()
