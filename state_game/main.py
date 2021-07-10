@@ -6,6 +6,7 @@ SCREEN_HEIGHT = 491
 
 df = pd.read_csv('50_states.csv')
 
+#Initial setup of graphic elements
 screen = Screen()
 screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
 screen.bgpic('blank_states_img.gif')
@@ -14,11 +15,11 @@ message = Turtle()
 message.penup()
 message.hideturtle()
 
-state_names = df.state.to_list()
-state_coords = tuple(zip(df.x.to_list(), df.y.to_list()))
-states_remaining = dict(zip(state_names, state_coords))
+#Get state names and coordinates, combine them into one dictionary
+states_remaining = {row[1]['state']:(row[1]['x'],row[1]['y']) for row in df.iterrows()}
 states_remaining_count = len(states_remaining)
 
+#setup message to track remaining stattes to guess
 states_remaining_message = Turtle()
 states_remaining_message.penup()
 states_remaining_message.hideturtle()
@@ -50,7 +51,7 @@ while states_remaining_count >= 0:
         break
     else:
         guess = guess.title()
-        if guess in state_names:
+        if guess in states_remaining.keys():
             write_state(guess)
             states_remaining.pop(guess)
             states_remaining_message.clear()
