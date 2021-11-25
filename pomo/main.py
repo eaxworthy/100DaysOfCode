@@ -35,8 +35,8 @@ class Pomo:
 
         self.counter = tk.Label(self.window, text=str(POM_COUNT), fg=RED, bg=YELLOW, font=('Arial', 14, "bold"))
 
-        self.mode.grid(column=2, row = 0, pady=20, sticky='S')
-        self.canvas.grid(column=1, row=1, columnspan=3, rowspan=2, sticky='N')
+        self.mode.grid(column=0, row = 0, pady=20, sticky='S', columnspan=5)
+        self.canvas.grid(column=0, row=1, columnspan=5, rowspan=2, sticky='N')
         self.start_button.grid(column=0, row=3, columnspan=2, rowspan=1, pady=10, padx=20, sticky="W")
         self.pause_button.grid(column=3, row=3, columnspan=2, rowspan=1, pady=10, padx=20, sticky="E")
         self.counter.grid(column=2, row=3)
