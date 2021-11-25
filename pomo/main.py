@@ -13,30 +13,42 @@ LONG_BREAK_MIN = 20
 POM_COUNT = 0
 MODE = 'WORK'
 
-def switch_mode():
-    pass
+class Pomo:
+    def __init__(self):
+        #setup window
+        self.window = tk.Tk()
+        self.window.title('Pomodoro Timer')
+        self.window.minsize( width=WINDOW_WIDTH, height=WINDOW_HEIGHT)
+        self.window.config(bg=YELLOW)
 
-window = tk.Tk()
-window.title('Pomodoro Timer')
-window.minsize(width=WINDOW_WIDTH, height=WINDOW_HEIGHT)
-window.config(bg=YELLOW)
-tomato_img = tk.PhotoImage(file='images/tomato.png')
-canvas = tk.Canvas(width=WINDOW_WIDTH, height=tomato_img.height(), bg=YELLOW, highlightthickness=0)
-
-canvas.create_image(WINDOW_WIDTH//2-24, tomato_img.height()//2, image=tomato_img)
-canvas.create_text(WINDOW_WIDTH//2-24, 140, text="00:00", fill="white", font=(FONT_NAME, 28, "bold"))
-mode = tk.Label(window, text = 'Work', bg=YELLOW, fg=RED, font=('Arial', 20, "bold"))
+        #setup tomato image
+        tomato_img = tk.PhotoImage(file='images/tomato.png')
+        self.canvas = tk.Canvas(width=WINDOW_WIDTH, height=tomato_img.height(), \
+                                bg=YELLOW, highlightthickness=0)
+        self.canvas.create_image(WINDOW_WIDTH//2, tomato_img.height()//2, image=tomato_img)
+        self.canvas.create_text(WINDOW_WIDTH//2, 140, text="00:00", fill="white", font=(FONT_NAME, 28, "bold"))
+        self.mode = tk.Label(self.window, text = 'Work', bg=YELLOW, fg=RED, font=('Arial', 20, "bold"))
 
 
-start_button = tk.Button(window, text='Start', bg=GREEN,  font=('Arial',12, "normal"))
-pause_button = tk.Button(window, text='Pause', bg=RED, font=('Arial',12, "normal"))
+        self.start_button = tk.Button(self.window, text='Start', width=6, bg=GREEN,  font=('Arial',12, "normal"))
+        self.pause_button = tk.Button(self.window, text='Pause', width=6, bg=RED, font=('Arial',12, "normal"))
 
-counter = tk.Label(window, text=str(POM_COUNT), fg=RED, bg=YELLOW, font=('Arial', 14, "bold"))
+        self.counter = tk.Label(self.window, text=str(POM_COUNT), fg=RED, bg=YELLOW, font=('Arial', 14, "bold"))
 
-mode.grid(column=2, row = 0, pady=20, sticky='S')
-canvas.grid(column=1, row=1, columnspan=3, rowspan=2, sticky='N')
-start_button.grid(column=0, row=3, columnspan=2, rowspan=1, pady=10, padx=20, sticky="W")
-pause_button.grid(column=3, row=3, columnspan=2, rowspan=1, pady=10, padx=20, sticky="E")
-counter.grid(column=2, row=3)
+        self.mode.grid(column=2, row = 0, pady=20, sticky='S')
+        self.canvas.grid(column=1, row=1, columnspan=3, rowspan=2, sticky='N')
+        self.start_button.grid(column=0, row=3, columnspan=2, rowspan=1, pady=10, padx=20, sticky="W")
+        self.pause_button.grid(column=3, row=3, columnspan=2, rowspan=1, pady=10, padx=20, sticky="E")
+        self.counter.grid(column=2, row=3)
+        
+        self.window.mainloop()
 
-window.mainloop()
+        def switch_mode():
+            pass
+
+if __name__ ==  "__main__":
+    pomo = Pomo()
+
+
+
+
