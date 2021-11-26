@@ -1,5 +1,6 @@
 import tkinter as tk
 import time
+from playsound import playsound
 
 #Display settings
 WINDOW_HEIGHT = 360
@@ -10,13 +11,17 @@ YELLOW = '#f1ffc4'
 FONT_NAME = 'clean'
 BUTTON_FONT = ('Arial',12, "normal")
 
-#Time settings
+#Time Settings
 #Adjust however best fits you
-WORK_MIN = 1
-SHORT_BREAK_MIN = 1
+WORK_MIN = 25
+SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 30
-MODES = ["Work", "Rest", "Long Rest"]
-START_TIMES = [WORK_MIN, SHORT_BREAK_MIN, LONG_BREAK_MIN]
+
+#Sound Settings
+MODES = [("Work", WORK_MIN), ("Break", SHORT_BREAK_MIN), ("Long Break", LONG_BREAK_MIN)]
+
+
+# //TODO: Have app grab attention at end of period, make a timer ding
 
 class Pomo:
     def __init__(self):
@@ -35,7 +40,7 @@ class Pomo:
         self.root.config(bg=YELLOW)
 
         #setup tomato image
-        tomato_img = tk.PhotoImage(file='images/tomato.png')
+        tomato_img = tk.PhotoImage(file='resources/images/tomato.png')
         self.canvas = tk.Canvas(width=WINDOW_WIDTH, height=tomato_img.height(), \
                                 bg=YELLOW, highlightthickness=0)
         self.canvas.create_image(WINDOW_WIDTH//2, tomato_img.height()//2, \
@@ -49,7 +54,7 @@ class Pomo:
         #setup text displays
         self.counter = tk.Label(self.root, text=str(self.pom_count), fg=RED, \
                                 bg=YELLOW, font=('Arial', 14, "bold"))
-        self.mode_display = tk.Label(self.root, text = MODES[self.current_mode], \
+        self.mode_display = tk.Label(self.root, text = MODES[self.current_mode][0], \
                                     bg=YELLOW, fg=RED, font=('Arial', 20, "bold"))
 
         #Setup buttons
@@ -91,8 +96,10 @@ class Pomo:
 
         if not self.seconds and not self.minutes:
             #end of period, update mode
+            self.root.focus_force()
+            self.root.lift()
 
-            #if last period was a work period, see what kind of rest is next
+            #if last period was a work period, see what kind of break is next
             if not self.current_mode:
                 self.mode_display['fg'] = GREEN
                 self.pom_count += 1
@@ -107,8 +114,8 @@ class Pomo:
                 self.current_mode = 0
 
             #update display
-            self.mode_display['text'] = MODES[self.current_mode]
-            self.minutes = START_TIMES[self.current_mode]
+            self.mode_display['text'] = MODES[self.current_mode][0]
+            self.minutes = MODES[self.current_mode][1]
 
         elif not self.seconds:
             #Start new minute
@@ -124,7 +131,7 @@ class Pomo:
         self.counter['text'] = str(self.pom_count)
 
         #continue timer
-        self.after_id = self.root.after(100, self.run_timer)
+        self.after_id = self.root.after(1000, self.run_timer)
 
 
 if __name__ ==  "__main__":
