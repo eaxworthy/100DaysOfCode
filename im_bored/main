@@ -1,0 +1,16 @@
+import requests as rq
+import tkinter as tk
+
+BASE_URL = "http://www.boredapi.com/api/activity/"
+PRICE_OPTIONS = [('Any', 0.0, 1.0), ('Free', 0, 0), ('Inexpensive', 0.01, 0.33), ('Moderate', 0.34, 0.66), ('Expensive', 0.67, 1.0)]
+DIFFICULTY_OPTIONS = [('Any', 0.0, 1.0),('Easy', 0, 0.2), ('Medium', 0.21, 0.74), ('Hard', 0.75, 1.0)]
+CATERGORY_OPTIONS =["Busywork", "Charity", "Cooking", "DIY", "Education", "Music", "Recreation", "Relaxation", "Social"] 
+
+def get_activity():
+	response = requests.get
+
+
+root = tk.Tk()
+options_frame = tk.Frame(root)
+activity_frame = tk.Frame(root)
+
