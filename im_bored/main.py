@@ -2,7 +2,7 @@ import requests as rq
 import tkinter as tk
 from tkinter import ttk
 
-BASE_URL = "http://www.boredapi.com/api/activity/"
+BASE_URL = "http://www.boredapi.com/api/activity?"
 
 PRICE_OPTIONS = {'Any':( 0.0, 1.0),'Any':('0.0', '1.0'), 'Free':('0', '0'), 'Inexpensive':('0.01', '0.33'), 'Moderate':('0.34', '0.66'), 'Expensive':('0.67', '1.0')}
 
@@ -57,7 +57,7 @@ class App(tk.Tk):
         button = ttk.Button(options_frame, text='Get Activity', command=self.get_activity)
 
         #Create text box to hold activity response
-        self.activity_text = tk.Message(activity_frame, width=300)
+        self.activity_text = tk.Label(activity_frame, wraplength=200, justify=tk.LEFT)
        
         #Configure grid
         self.columnconfigure(1, weight=2)
@@ -79,12 +79,21 @@ class App(tk.Tk):
         
     def get_activity(self):
         price_min, price_max = PRICE_OPTIONS[self.price_var.get()]
+        price_range = f'minprice={price_min}&maxprice={price_max}&'
+        
         diff_min, diff_max = DIFFICULTY_OPTIONS[self.diff_var.get()]
+        diff_range = f'minaccessibility={diff_min}&maxaccessibility={diff_max}'
+        
         category = self.cat_var.get().lower()
+        category = '&type='+category if category != 'any' else '' 
         participants = self.par_var.get().lower()
-        response = price_min +' ' + price_max#, diff_min, diff_max, category, participants)
-        self.activity_text['text'] = response
-        #response = requests.get
+        participants = '&participants='+participants if participants != 'any' else ''
+
+        response = rq.get(BASE_URL+price_range+diff_range+category+participants)
+        try: 
+            self.activity_text['text'] = response.json()['activity']
+        except:
+            self.activity_text['text'] = "No activities matching chosen parameters found"
 
 if __name__ == '__main__':
     app = App()
